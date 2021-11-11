@@ -43,17 +43,24 @@ main{
    width: 100%;
    background-color: #fff;
    min-height: 40px;
-   
+
    display: flex;
    align-items: center;
    line-height: 20px;
+   flex-wrap: wrap;
 }
 
 .messageBox *{
-   margin: 6px;
    font-size: 14px;
-   overflow-wrap: break-word;
+   margin: 6px;
 }
+
+.messageBox p{
+   white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 
 .messageBox span{
    color: #B0B0B0;
