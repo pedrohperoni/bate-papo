@@ -39,25 +39,27 @@ main{
    flex-direction: column;
 }
 
-.message{
+.messageBox{
    width: 100%;
-   height: 40px;
    background-color: #fff;
-
+   min-height: 40px;
+   
    display: flex;
    align-items: center;
+   line-height: 20px;
 }
 
-.message *{
+.messageBox *{
    margin: 6px;
    font-size: 14px;
+   overflow-wrap: break-word;
 }
 
-.message span{
+.messageBox span{
    color: #B0B0B0;
 }
 
-.message strong{
+.messageBox strong{
    font-weight: 700;
 }
 
@@ -65,11 +67,11 @@ main{
    background-color: #DCDCDC;
 }
 
-.chat{
+.message{
    background-color: #fff;
 }
 
-.whisper{
+.private_message{
    background-color: #FFDEDE;
 }
 
