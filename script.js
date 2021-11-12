@@ -2,7 +2,7 @@
 
 let user = prompt("Qual seu nome?");
 const userPromise = axios.post("https://mock-api.driven.com.br/api/v4/uol/participants",{name: user})
-userPromise.then(teste)
+userPromise.then(getMessages)
 userPromise.catch(error)
 
 function teste(resposta){
@@ -25,20 +25,18 @@ function connectionLost(){
 
 // load messages from server (load every 3 seconds)
 
-  const messagesPromise =  axios.get("https://mock-api.driven.com.br/api/v4/uol/messages")
-  messagesPromise.then(displayMessages)
-   console.log("try")
+function getMessages(){
+   axios.get("https://mock-api.driven.com.br/api/v4/uol/messages").then(displayMessages)
 
    function displayMessages(chatInfo){
       const info = chatInfo.data
-      const messageList = document.querySelector("main")
+      let messageList = document.querySelector("main")
+      messageList.innerHTML = 'funciona'
 
-      console.log(info, "console log")
-   
       for(i=0;i<=info.length;i++){
          let defaultText = '';
          let receiver = '';
-   
+
          if(info[i].type === "message"){
                defaultText = "<p>para</p>"
                receiver = `<strong>${info[i].to}</strong>`
@@ -60,6 +58,19 @@ function connectionLost(){
       messageList.scrollIntoView(false)
       }
    }
+   
+   setInterval(updateMessages, 3000)
+   
+   function updateMessages(){
+      axios.get("https://mock-api.driven.com.br/api/v4/uol/messages").then(displayMessages)
+   }
+
+}
+
+
+
+
+   
 
 
 // send messages to the server
