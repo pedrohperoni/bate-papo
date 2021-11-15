@@ -1,5 +1,4 @@
 // user log in request
-// precisa chamar a funcao depois que o prompt recebe o nome se nao ele carrega antes e o user nao tem valor
 let user = "";
 getName();
 function getName(){
@@ -7,11 +6,9 @@ function getName(){
    if(user !== ""){
       console.log("aaa")
       postUser()
-
    } else {
       getName();
    }
-
 }
 
 function postUser(){
@@ -22,14 +19,11 @@ function postUser(){
    userPromise.catch(error)
 }
 
-
-
-
 function error(){
    user = prompt("Esse nome é inválido ou já está em uso, digite outro nome!")
 }
 
-// user status check (check every 5 seconds)
+// user status check 
 function updateUser(){
    console.log("updating")
    const updatePromise = axios.post("https://mock-api.driven.com.br/api/v4/uol/status", {name:user})
@@ -41,7 +35,7 @@ function updateUser(){
    }
    setInterval(keepUpdated, 5000)
 }
-// load messages from server (load every 3 seconds)
+// load messages from server
 
 function getMessages(){
    axios.get("https://mock-api.driven.com.br/api/v4/uol/messages").then(displayMessages)
@@ -54,25 +48,43 @@ function getMessages(){
       for(i=0;i<=info.length;i++){
          let defaultText = '';
          let receiver = '';
-
+      
          if(info[i].type === "message"){
                defaultText = "<p>para</p>"
                receiver = `<strong>${info[i].to}</strong>`
-         } else if (info[i].type === "private_message"){
+               messageList.innerHTML += `         
+               <div class="messageBox ${info[i].type}" data-identifier="message">
+                  <span>(${info[i].time})</span>
+                  <strong>${info[i].from}</strong>
+                  ${defaultText}
+                  ${receiver}
+                  <p>${info[i].text}</p>
+               </div>
+               `
+         } else if (info[i].type === "status"){
+            messageList.innerHTML += `         
+            <div class="messageBox ${info[i].type}" data-identifier="message">
+               <span>(${info[i].time})</span>
+               <strong>${info[i].from}</strong>
+               ${defaultText}
+               ${receiver}
+               <p>${info[i].text}</p>
+            </div>
+            `
+         }
+         else if (info[i].type === "private_message" && user == info[i].to){
                defaultText = "<p>reservadamente para</p>"
                receiver = `<strong>${info[i].to}</strong>`
+               messageList.innerHTML += `         
+               <div class="messageBox ${info[i].type}" data-identifier="message">
+                  <span>(${info[i].time})</span>
+                  <strong>${info[i].from}</strong>
+                  ${defaultText}
+                  ${receiver}
+                  <p>${info[i].text}</p>
+               </div>
+               `
          }
-
-      messageList.innerHTML += 
-      `         
-      <div class="messageBox ${info[i].type}">
-         <span>(${info[i].time})</span>
-         <strong>${info[i].from}</strong>
-         ${defaultText}
-         ${receiver}
-         <p>${info[i].text}</p>
-      </div>
-      `
       messageList.scrollIntoView(false)
       }
    }
