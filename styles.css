@@ -53,12 +53,13 @@ main{
 .messageBox *{
    font-size: 14px;
    margin: 3px;
+   overflow: hidden;
+   word-wrap: break-word;
 }
 
 .messageBox p{
-   white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+   overflow: hidden;
+   word-wrap: break-word;
 }
 
 

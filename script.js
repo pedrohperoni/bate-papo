@@ -1,28 +1,46 @@
 // user log in request
+// precisa chamar a funcao depois que o prompt recebe o nome se nao ele carrega antes e o user nao tem valor
+let user = "";
+getName();
+function getName(){
+   user = prompt("Qual seu nome?");
+   if(user !== ""){
+      console.log("aaa")
+      postUser()
 
-let user = prompt("Qual seu nome?");
-const userPromise = axios.post("https://mock-api.driven.com.br/api/v4/uol/participants",{name: user})
-userPromise.then(getMessages)
-userPromise.catch(error)
+   } else {
+      getName();
+   }
 
-function teste(resposta){
-   console.log(resposta,"success");
 }
+
+function postUser(){
+   console.log("request", user)
+   const userPromise = axios.post("https://mock-api.driven.com.br/api/v4/uol/participants",{name: user})
+   userPromise.then(getMessages)
+   userPromise.then(updateUser)
+   userPromise.catch(error)
+}
+
+
+
 
 function error(){
    user = prompt("Esse nome é inválido ou já está em uso, digite outro nome!")
 }
 
 // user status check (check every 5 seconds)
-
-const userUpdatePromise = axios.post("https://mock-api.driven.com.br/api/v4/uol/status", {name:user})
-userUpdatePromise.catch()
-
-function connectionLost(){
-   location.reload()
-   console.log("userUpdated")
+function updateUser(){
+   console.log("updating")
+   const updatePromise = axios.post("https://mock-api.driven.com.br/api/v4/uol/status", {name:user})
+   updatePromise.then(keepUpdated)
+   updatePromise.catch(console.log("logged out"))
+   function keepUpdated(){
+      axios.post("https://mock-api.driven.com.br/api/v4/uol/status", {name:user})
+      .then(console.log("asaas"))
+   }
+   setInterval(keepUpdated, 5000)
 }
-
 // load messages from server (load every 3 seconds)
 
 function getMessages(){
@@ -31,7 +49,7 @@ function getMessages(){
    function displayMessages(chatInfo){
       const info = chatInfo.data
       let messageList = document.querySelector("main")
-      messageList.innerHTML = 'funciona'
+      messageList.innerHTML = ''
 
       for(i=0;i<=info.length;i++){
          let defaultText = '';
@@ -58,7 +76,7 @@ function getMessages(){
       messageList.scrollIntoView(false)
       }
    }
-   
+
    setInterval(updateMessages, 3000)
    
    function updateMessages(){
@@ -67,30 +85,23 @@ function getMessages(){
 
 }
 
-
-
-
-   
-
-
 // send messages to the server
 
 function sendMessage(){
 
 let message = document.querySelector(".inputMessage").value
-console.log(message)
+console.log(document.querySelector(".inputMessage").value)
 
 axios.post("https://mock-api.driven.com.br/api/v4/uol/messages",{
    from: user,
-	to: "Todos",
+	to: "Todos", 
 	text: message,
 	type: "message"
 })
-.then(function(response){
-   console.log("mensagem enviada",response)
-   messagesPromise.then(displayMessages)
-})
+.then(getMessages)
 .catch(function(error){
    console.log("erro de envio",error.response)
 });
+document.querySelector(".inputMessage").value = null
+document.querySelector(".inputMessage").placeholder = "Escreva aqui..."
 }
