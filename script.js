@@ -4,7 +4,6 @@ getName();
 function getName(){
    user = prompt("Qual seu nome?");
    if(user !== ""){
-      console.log("aaa")
       postUser()
    } else {
       getName();
@@ -12,7 +11,6 @@ function getName(){
 }
 
 function postUser(){
-   console.log("request", user)
    const userPromise = axios.post("https://mock-api.driven.com.br/api/v4/uol/participants",{name: user})
    userPromise.then(getMessages)
    userPromise.then(updateUser)
@@ -25,13 +23,10 @@ function error(){
 
 // user status check 
 function updateUser(){
-   console.log("updating")
    const updatePromise = axios.post("https://mock-api.driven.com.br/api/v4/uol/status", {name:user})
    updatePromise.then(keepUpdated)
-   updatePromise.catch(console.log("logged out"))
    function keepUpdated(){
       axios.post("https://mock-api.driven.com.br/api/v4/uol/status", {name:user})
-      .then(console.log("asaas"))
    }
    setInterval(keepUpdated, 5000)
 }
@@ -102,7 +97,6 @@ function getMessages(){
 function sendMessage(){
 
 let message = document.querySelector(".inputMessage").value
-console.log(document.querySelector(".inputMessage").value)
 
 axios.post("https://mock-api.driven.com.br/api/v4/uol/messages",{
    from: user,
@@ -111,9 +105,6 @@ axios.post("https://mock-api.driven.com.br/api/v4/uol/messages",{
 	type: "message"
 })
 .then(getMessages)
-.catch(function(error){
-   console.log("erro de envio",error.response)
-});
 document.querySelector(".inputMessage").value = null
 document.querySelector(".inputMessage").placeholder = "Escreva aqui..."
 }
